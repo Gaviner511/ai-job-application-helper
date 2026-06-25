@@ -9,8 +9,8 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $Root = Split-Path -Parent $ScriptDir
 $Outputs = Join-Path $Root "outputs"
 $Work = Join-Path $Root "work"
-$SelfLabel = -join ([char[]](33258, 29992, 23436, 25972, 29256))
-$ShareLabel = (-join ([char[]](20998, 20139, 26080))) + "AI" + [char]29256
+$ChineseProductName = -join ([char[]](27714, 32844, 30003, 35831, 21161, 25163))
+$PackageLabel = "Job-Application-Helper_$ChineseProductName"
 
 function Get-ManifestVersion {
   $manifestPath = Join-Path $Root "manifest.json"
@@ -93,16 +93,13 @@ function Copy-Package($Destination) {
 function Remove-OldPackages {
   param([int]$Keep)
   if ($Keep -lt 1) { return }
-  $selfEscaped = [regex]::Escape($SelfLabel)
-  $shareEscaped = [regex]::Escape($ShareLabel)
-  $pattern = "^Job-Application-Helper-($selfEscaped|$shareEscaped)-v(?<version>\d+\.\d+\.\d+)\.zip$"
-  $packages = Get-ChildItem -LiteralPath $Outputs -File -Filter "Job-Application-Helper-*.zip" | Where-Object { $_.Name -match $pattern }
-  $packages | Group-Object { if ($_.Name.Contains($SelfLabel)) { "self" } else { "share" } } | ForEach-Object {
-    $sorted = $_.Group | Sort-Object @{ Expression = { [version]($_.Name -replace $pattern, '${version}') }; Descending = $true }, LastWriteTime -Descending
-    $sorted | Select-Object -Skip $Keep | ForEach-Object {
-      Remove-Item -LiteralPath $_.FullName -Force
-      Write-Host "Removed old package: $($_.Name)"
-    }
+  $labelEscaped = [regex]::Escape($PackageLabel)
+  $pattern = "^$labelEscaped-v(?<version>\d+\.\d+\.\d+)\.zip$"
+  $packages = Get-ChildItem -LiteralPath $Outputs -File -Filter "$PackageLabel-v*.zip" | Where-Object { $_.Name -match $pattern }
+  $sorted = $packages | Sort-Object @{ Expression = { [version]($_.Name -replace $pattern, '${version}') }; Descending = $true }, LastWriteTime -Descending
+  $sorted | Select-Object -Skip $Keep | ForEach-Object {
+    Remove-Item -LiteralPath $_.FullName -Force
+    Write-Host "Removed old package: $($_.Name)"
   }
 }
 
@@ -115,24 +112,18 @@ $Version = $Version.TrimStart("v")
 [System.IO.Directory]::CreateDirectory($Work) | Out-Null
 
 $current = Join-Path $Outputs "JobApplicationHelper-current\JobApplicationHelper"
-$selfPackage = Join-Path $Work "self-v$($Version.Replace('.', ''))\JobApplicationHelper"
-$sharePackage = Join-Path $Work "no-ai-share-v$($Version.Replace('.', ''))\JobApplicationHelper"
-$selfZip = Join-Path $Outputs "Job-Application-Helper-$SelfLabel-v$Version.zip"
-$shareZip = Join-Path $Outputs "Job-Application-Helper-$ShareLabel-v$Version.zip"
+$releasePackage = Join-Path $Work "release-v$($Version.Replace('.', ''))\JobApplicationHelper"
+$releaseZip = Join-Path $Outputs "$PackageLabel-v$Version.zip"
 
 Copy-Package $current
-Copy-Package $selfPackage
-Copy-Package $sharePackage
+Copy-Package $releasePackage
 
-if (Test-Path -LiteralPath $selfZip) { Remove-Item -LiteralPath $selfZip -Force }
-if (Test-Path -LiteralPath $shareZip) { Remove-Item -LiteralPath $shareZip -Force }
+if (Test-Path -LiteralPath $releaseZip) { Remove-Item -LiteralPath $releaseZip -Force }
 
-Compress-Archive -Path (Join-Path $selfPackage "*") -DestinationPath $selfZip -Force
-Compress-Archive -Path (Join-Path $sharePackage "*") -DestinationPath $shareZip -Force
+Compress-Archive -Path (Join-Path $releasePackage "*") -DestinationPath $releaseZip -Force
 
 Remove-OldPackages -Keep $KeepVersions
 
 Write-Host "Current extension folder: $current"
-Write-Host "Self package: $selfZip"
-Write-Host "Share package: $shareZip"
-Write-Host "Kept latest $KeepVersions version(s) for each package type."
+Write-Host "Release package: $releaseZip"
+Write-Host "Kept latest $KeepVersions unified release package(s)."

@@ -23,6 +23,18 @@ Prepare v1.0 portfolio release
 6. Click `Publish repository`.
 7. Confirm the repository name and visibility.
 
+## Create A Release
+
+After publishing the repository, create a GitHub Release so other people can download the packaged extension without cloning the source code.
+
+Recommended release fields:
+
+- Tag: `v1.0.0`
+- Title: `v1.0.0 - AI Job Application Helper / 求职申请助手`
+- Asset: `outputs/Job-Application-Helper_求职申请助手-v1.0.0.zip`
+
+This is now a unified build. AI behavior is controlled in the extension settings through local model or cloud API provider selection, so separate AI/no-AI packages are no longer needed.
+
 ## Upload With Git CLI
 
 If Git is installed:

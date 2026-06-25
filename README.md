@@ -20,6 +20,16 @@ The long-term goal is to keep improving scan accuracy, resume tailoring quality,
 - Exports tailored resumes as TXT, HTML, and PDF.
 - Includes a job finder and scorer workflow for reviewing potential jobs before applying.
 
+## Download
+
+For normal use, download the latest bilingual release package from GitHub Releases:
+
+```text
+Job-Application-Helper_求职申请助手-v1.0.0.zip
+```
+
+The extension now uses model/provider selection in settings, so there is one unified package instead of separate AI and no-AI builds.
+
 ## Safety Principles
 
 - No auto-submit.
