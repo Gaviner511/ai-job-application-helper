@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Job Application Helper Settings</title>
+    <link rel="stylesheet" href="settings.css" />
+    <link rel="stylesheet" href="ui_theme.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <p class="eyebrow">SETTINGS</p>
+          <h1>Helper settings</h1>
+          <p class="muted">Keep AI, memory, and safety controls in one quiet place.</p>
+        </div>
+      </header>
+
+      <section class="panel">
+        <div class="section-title">
+          <h2>Experience mode</h2>
+          <p class="muted">Basic keeps the workflow clean. Advanced shows AI scan, diagnostics, and testing tools.</p>
+        </div>
+        <div class="mode-choice">
+          <label><input type="radio" name="ux-mode" value="basic" /> Basic</label>
+          <label><input type="radio" name="ux-mode" value="advanced" /> Advanced</label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-title">
+          <h2>AI provider</h2>
+          <p class="muted">Use local AI for privacy or OpenAI Cloud for higher-quality resume tailoring.</p>
+        </div>
+        <div class="grid">
+          <label>Default AI mode
+            <select id="ai-provider">
+              <option value="local">Local Ollama</option>
+              <option value="cloud">OpenAI Cloud</option>
+            </select>
+          </label>
+          <label>Cloud quality
+            <select id="openai-quality">
+              <option value="balanced">Balanced / cheaper</option>
+              <option value="better">Better rewrite</option>
+              <option value="best">Best polish</option>
+            </select>
+          </label>
+        </div>
+        <label>OpenAI API key
+          <input id="openai-api-key" type="password" placeholder="sk-..." autocomplete="off" />
+        </label>
+        <details class="advanced">
+          <summary>Model names</summary>
+          <div class="grid">
+            <label>Balanced model<input id="openai-model-balanced" /></label>
+            <label>Better model<input id="openai-model-better" /></label>
+            <label>Best model<input id="openai-model-best" /></label>
+          </div>
+        </details>
+        <label class="check-row"><input id="confirm-cloud-ai" type="checkbox" checked /> Ask before sending JD/profile data to OpenAI</label>
+        <div class="actions">
+          <button id="save-ai-settings" type="button">Save AI settings</button>
+          <button id="test-cloud-ai" class="secondary" type="button">Test cloud AI</button>
+        </div>
+        <p class="muted small">Your API key is stored in this browser's local extension storage. Cloud analysis sends the JD and processed profile data to OpenAI only when you choose cloud AI.</p>
+      </section>
+
+      <section class="panel">
+        <div class="section-title">
+          <h2>Learning Memory</h2>
+          <p class="muted">Saved field corrections stay in this browser and help future scans on the same site.</p>
+        </div>
+        <button id="refresh" class="secondary" type="button">Refresh</button>
+        <details class="advanced">
+          <summary>Danger zone</summary>
+          <button id="clear-all" class="danger" type="button">Delete all saved corrections</button>
+        </details>
+        <div id="memory-list" class="memory-list"></div>
+      </section>
+
+      <section class="panel">
+        <div class="section-title">
+          <h2>Repair helper state</h2>
+          <p class="muted">Use this if the floating helper, page cache, or temporary scan state feels stuck.</p>
+        </div>
+        <div class="actions">
+          <button id="repair-helper-state" class="secondary" type="button">Clear temporary helper state</button>
+        </div>
+        <p class="muted small">This does not delete your profile, saved profiles, AI settings, or learning memory.</p>
+      </section>
+
+      <section class="panel">
+        <div class="section-title">
+          <h2>1.0 safety notes</h2>
+          <p class="muted">Local-first, manual review, no auto-submit, and no bulk applying.</p>
+        </div>
+        <ul class="notes-list">
+          <li>Sensitive fields stay review-first.</li>
+          <li>Complex dropdowns are handled by click-to-choose instead of silent bulk fill.</li>
+          <li>Resume tailoring prepares drafts; you review before export or use.</li>
+        </ul>
+      </section>
+
+      <section class="panel">
+        <p id="status" class="muted">No changes yet.</p>
+      </section>
+    </main>
+    <script src="ui_theme.js"></script>
+    <script src="settings.js"></script>
+  </body>
+</html>

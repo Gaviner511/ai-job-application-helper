@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Job Finder</title>
+    <link rel="stylesheet" href="profile.css" />
+    <link rel="stylesheet" href="ui_theme.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <p class="eyebrow">REVIEW BEFORE APPLYING</p>
+          <h1>Job Finder <span class="version">v1.0.0</span></h1>
+        </div>
+      </header>
+
+      <section class="panel">
+        <div class="section-title">
+          <h2>Search setup</h2>
+          <p class="muted">Generate keywords, choose filters, then search. Nothing applies automatically.</p>
+        </div>
+        <div class="actions">
+          <button id="generate-keywords" class="secondary" type="button">Generate keywords</button>
+          <button id="search-jobs" class="accent" type="button">Search jobs</button>
+        </div>
+        <label>Search keywords<textarea id="keywords" rows="4" placeholder="Generate keywords or type your own, separated by commas or new lines."></textarea></label>
+        <details class="advanced">
+          <summary>Filters & options</summary>
+          <label>Company ATS boards<textarea id="company-boards" rows="3" placeholder="One per line: greenhouse:company, lever:company, ashby:company, or a public Greenhouse/Lever/Ashby careers URL."></textarea></label>
+          <div class="grid">
+            <fieldset class="job-type-options">
+              <legend>Location</legend>
+              <label class="check-row"><input name="job-location" type="checkbox" value="remote" /> Remote</label>
+              <label class="check-row"><input name="job-location" type="checkbox" value="bay area" /> Bay Area</label>
+              <label class="check-row"><input name="job-location" type="checkbox" value="united states" /> United States</label>
+              <label class="check-row"><input name="job-location" type="checkbox" value="new york" /> New York</label>
+              <label class="check-row"><input name="job-location" type="checkbox" value="new jersey" /> New Jersey</label>
+              <label>Custom location<input id="job-location-custom" placeholder="City, state, or country" /></label>
+            </fieldset>
+            <fieldset class="job-type-options">
+              <legend>Job type</legend>
+              <label class="check-row"><input name="job-type" type="checkbox" value="full time" /> Full-time</label>
+              <label class="check-row"><input name="job-type" type="checkbox" value="part time" /> Part-time</label>
+              <label class="check-row"><input name="job-type" type="checkbox" value="internship" /> Internship</label>
+              <label class="check-row"><input name="job-type" type="checkbox" value="contract" /> Contract</label>
+            </fieldset>
+          </div>
+          <div class="grid">
+            <label>Minimum salary<input id="salary-min" type="number" min="0" step="1000" placeholder="70000" /></label>
+            <label>Maximum salary<input id="salary-max" type="number" min="0" step="1000" placeholder="120000" /></label>
+          </div>
+          <p class="muted small">Salary filtering only applies when a job clearly lists salary. Jobs without salary stay in the results.</p>
+          <label class="check-row"><input id="use-ai-keywords" type="checkbox" checked /> Use local AI for keywords when available</label>
+          <label class="check-row"><input id="use-ai-scoring" type="checkbox" /> Refine top scores with local AI</label>
+        </details>
+        <p class="muted small">Sources: Remotive public API and Arbeitnow public API. You can review each job before opening it and using the existing autofill helper.</p>
+        <p id="job-status" class="muted">Open Profile Manager first if your profile is empty.</p>
+      </section>
+
+      <section class="panel">
+        <div class="section-title">
+          <h2>Review results</h2>
+          <p class="muted small">Open jobs one by one. The helper still stops before final submit.</p>
+        </div>
+        <details class="advanced"><summary>Export reviewed jobs</summary><div class="actions">
+          <button id="save-reviewed" class="secondary" type="button">Save reviewed jobs</button>
+          <button id="export-csv" class="secondary" type="button">Export CSV</button>
+          <button id="export-excel" class="secondary" type="button">Export Excel</button>
+        </div></details>
+        <div id="job-results" class="job-results"></div>
+      </section>
+
+      <footer>Manual review required. This extension never submits applications by itself.</footer>
+    </main>
+    <script src="ui_theme.js"></script>
+    <script type="module" src="job_finder_app.js"></script>
+  </body>
+</html>

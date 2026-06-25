@@ -1,0 +1,30 @@
+# Generated packages and local build output
+outputs/
+work/
+*.zip
+
+# Python caches and logs
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.log
+.pytest_cache/
+.mypy_cache/
+
+# Local/private workspace data
+.agents/
+.codex/
+remote-ai-server/
+.env
+.env.*
+*.local
+profile_store.json
+profiles.json
+jobs.json
+jobs.csv
+jobs.xlsx
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/

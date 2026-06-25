@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resume Tailor</title>
+    <link rel="stylesheet" href="resume_tailor.css" />
+    <link rel="stylesheet" href="ui_theme.css" />
+  </head>
+  <body>
+    <main>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">RESUME TAILOR</p>
+          <h1>Fit this job</h1>
+          <p class="muted">Read the JD, revise your existing resume with AI, then export from the center workspace.</p>
+        </div>
+        <div class="top-actions">
+          <button id="open-tailor-tab" class="secondary" type="button">Open tab</button>
+        </div>
+      </header>
+
+      <section class="panel hero">
+        <div class="workflow">
+          <div class="workflow-step primary-step">
+            <span class="step-number">1</span>
+            <div>
+              <strong>Read JD</strong>
+              <p class="muted small">Read page text, then let AI clean the JD. Visual is backup.</p>
+            </div>
+            <div class="step-actions">
+              <button id="extract-jd" type="button">Read + clean JD</button>
+              <button id="extract-jd-visual" class="secondary" type="button">Visual backup</button>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <span class="step-number">2</span>
+            <div>
+              <strong>Analyze</strong>
+              <p class="muted small">Score fit and prepare inline suggestions.</p>
+            </div>
+            <button id="analyze-jd" class="accent" type="button" disabled>Analyze fit</button>
+          </div>
+          <div class="workflow-step">
+            <span class="step-number">3</span>
+            <div>
+              <strong>Revise resume</strong>
+              <p class="muted small">AI rewrites your current draft, preserving facts and structure.</p>
+            </div>
+            <button id="rewrite-resume-ai" class="accent" type="button">AI rewrite resume</button>
+          </div>
+        </div>
+
+        <section class="floating-tab-prompt hidden">
+          <div>
+            <h2>Resume editing opens in a tab</h2>
+            <p class="muted small">Keep split view for reading and analysis. Use the full tab for AI revisions and PDF export.</p>
+          </div>
+          <button id="open-tailor-tab-inline" class="accent" type="button">Open Resume Tailor tab</button>
+        </section>
+
+        <details class="compact">
+          <summary>Temporary AI and layout settings</summary>
+          <div class="grid settings-grid">
+            <label>AI provider
+              <select id="provider">
+                <option value="">Use global setting</option>
+                <option value="local">Local Ollama</option>
+                <option value="cloud">OpenAI Cloud</option>
+              </select>
+            </label>
+            <label>Optimize for
+              <select id="strategy">
+                <option value="balanced">Balanced</option>
+                <option value="ats">ATS keywords</option>
+                <option value="project-management">Project management</option>
+                <option value="operations-risk">Operations / risk</option>
+                <option value="entry-level">Entry-level friendly</option>
+                <option value="concise">Concise one-page resume</option>
+                <option value="impact">Stronger impact bullets</option>
+              </select>
+            </label>
+            <label>Resume layout
+              <select id="layout-template">
+                <option value="original">Original / uploaded resume style</option>
+                <option value="classic">Classic ATS</option>
+                <option value="compact">Compact one-page</option>
+                <option value="modern">Modern clean</option>
+              </select>
+            </label>
+          </div>
+          <p class="muted small">These choices only affect this Tailor workspace. Global AI settings stay unchanged.</p>
+        </details>
+        <p id="status" class="muted">Start by reading the JD from the current page.</p>
+      </section>
+
+      <div class="workspace-grid">
+        <aside class="side-column">
+          <section id="jd-card" class="panel hidden">
+            <div class="section-title">
+              <h2>Job description</h2>
+              <p id="jd-meta" class="muted small"></p>
+            </div>
+            <textarea id="jd-text" rows="10" placeholder="Extracted JD appears here. You can edit or paste before analyzing."></textarea>
+          </section>
+
+          <section id="match-card" class="panel hidden">
+            <div class="score-row">
+              <div>
+                <span id="match-score" class="score">--</span>
+                <strong id="match-recommendation">Match score</strong>
+                <p id="match-summary" class="muted small"></p>
+              </div>
+              <span id="visa-risk" class="pill">visa</span>
+            </div>
+            <h3>Strengths</h3>
+            <ul id="strengths"></ul>
+            <h3>Gaps / review</h3>
+            <ul id="gaps"></ul>
+          </section>
+        </aside>
+
+        <section id="resume-card" class="panel resume-card">
+          <div class="section-title resume-title-row">
+            <div>
+              <h2>Resume workspace</h2>
+              <p class="muted small">Most actions happen here. Click a block to ask AI or edit inline.</p>
+            </div>
+            <div class="resume-toolbar">
+              <button id="refresh-resume" class="secondary" type="button">Load resume</button>
+              <button id="resume-preview-mode" class="secondary active" type="button">Preview</button>
+              <button id="resume-edit-mode" class="secondary" type="button">Raw</button>
+            </div>
+          </div>
+
+          <div class="resume-toolbar main-resume-actions">
+            <button id="undo-resume" class="secondary" type="button" disabled>Undo</button>
+            <button id="copy-resume" class="secondary" type="button">Copy</button>
+            <button id="export-text" class="secondary" type="button" disabled>TXT</button>
+            <button id="export-html" class="secondary" type="button" disabled>HTML</button>
+            <button id="export-pdf" class="secondary" type="button" disabled>PDF</button>
+            <button id="save-draft" class="secondary" type="button">Save version</button>
+          </div>
+
+          <article id="resume-preview" class="resume-preview empty">Load your current profile resume or use AI rewrite after reading a JD.</article>
+          <textarea id="resume-editor" class="hidden" rows="16" placeholder="Your current resume draft will appear here."></textarea>
+          <textarea id="draft-text" class="hidden" rows="1"></textarea>
+
+          <aside id="suggestion-drawer" class="suggestion-drawer hidden">
+            <div class="section-title">
+              <div>
+                <h2>Block suggestions</h2>
+                <p id="suggestion-drawer-context" class="muted small">Click a resume line to review matching suggestions.</p>
+              </div>
+              <button id="suggestion-drawer-close" class="secondary" type="button">Close</button>
+            </div>
+            <div id="suggestion-drawer-list"></div>
+          </aside>
+
+          <div id="resume-ai-popover" class="resume-ai-popover hidden">
+            <strong>Ask AI</strong>
+            <p class="muted small">Revise the selected resume block. Keep it truthful.</p>
+            <textarea id="resume-ai-instruction" rows="3" placeholder="Example: make this bullet more concise and closer to the JD."></textarea>
+            <div class="flow popover-actions">
+              <button id="resume-ai-apply" class="accent" type="button">Revise</button>
+              <button id="resume-ai-close" class="secondary" type="button">Close</button>
+            </div>
+          </div>
+        </section>
+
+        <aside class="side-column">
+          <section id="keywords-card" class="panel hidden">
+            <h2>Keywords</h2>
+            <div class="keyword-block">
+              <strong>JD keywords</strong>
+              <div id="jd-keywords" class="chips"></div>
+            </div>
+            <div class="keyword-block">
+              <strong>Covered</strong>
+              <div id="covered-keywords" class="chips"></div>
+            </div>
+            <div class="keyword-block">
+              <strong>Consider if true</strong>
+              <div id="consider-keywords" class="chips warn"></div>
+            </div>
+            <div class="keyword-block">
+              <strong>Do not claim unless true</strong>
+              <div id="missing-keywords" class="chips danger"></div>
+            </div>
+          </section>
+
+        </aside>
+      </div>
+
+      <section id="extras-card" class="panel notes-panel hidden">
+        <details>
+          <summary>Application notes</summary>
+          <div class="notes-grid">
+            <label>Cover letter draft
+              <textarea id="cover-letter" rows="8"></textarea>
+            </label>
+            <div>
+              <h3>Interview talking points</h3>
+              <ul id="talking-points"></ul>
+              <h3>Final checklist</h3>
+              <ul id="checklist"></ul>
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <div id="inline-confirm" class="inline-confirm hidden" role="dialog" aria-modal="true">
+        <div class="inline-confirm-card">
+          <strong id="inline-confirm-title">Confirm action</strong>
+          <p id="inline-confirm-message" class="muted"></p>
+          <div class="flow">
+            <button id="inline-confirm-yes" class="accent" type="button">Continue</button>
+            <button id="inline-confirm-no" class="secondary" type="button">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <footer>No automatic submission. No original profile overwrite. <span id="tailor-version"></span></footer>
+    </main>
+    <script src="ui_theme.js"></script>
+    <script type="module" src="resume_tailor.js?v=1.0.0"></script>
+  </body>
+</html>

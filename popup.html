@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Job Application Helper</title>
+    <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="ui_theme.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <p class="eyebrow">JOB APPLICATION HELPER</p>
+          <h1>Fill one page at a time</h1>
+        </div>
+      </header>
+      <section class="panel intro-panel">
+        <div class="mode-row">
+          <span>Mode</span>
+          <div class="mode-toggle" role="group" aria-label="Helper mode">
+            <button id="mode-basic" class="active" type="button">Basic</button>
+            <button id="mode-advanced" type="button">Advanced</button>
+          </div>
+        </div>
+        <div class="active-profile-row">
+          <span>Profile</span>
+          <strong id="popup-active-profile">Current browser profile</strong>
+        </div>
+        <details class="compact-tools">
+          <summary>Profile & pages</summary>
+          <div class="popup-profile-switcher">
+            <div class="popup-profile-controls">
+              <select id="popup-profile-slot-select" aria-label="Saved profiles"><option value="">No saved profiles</option></select>
+              <button id="popup-switch-profile" class="secondary" type="button">Switch</button>
+            </div>
+          </div>
+          <div class="quick-actions">
+            <button id="open-profile" class="secondary" type="button">Profile</button>
+            <button id="open-tailor" class="secondary" type="button">Resume Tailor</button>
+            <button id="open-job-finder" class="secondary" type="button">Job Finder</button>
+            <button id="open-settings" class="secondary" type="button">Settings</button>
+          </div>
+        </details>
+      </section>
+
+      <section id="onboarding-card" class="panel onboarding-card hidden">
+        <div>
+          <p class="eyebrow">FIRST RUN</p>
+          <h2>Three-step workflow</h2>
+          <ol class="help-list">
+            <li>Build or import a profile.</li>
+            <li>Scan one application page.</li>
+            <li>Review matches, then fill safely.</li>
+          </ol>
+        </div>
+        <button id="dismiss-onboarding" class="secondary" type="button">Got it</button>
+      </section>
+
+      <section class="panel step-panel">
+        <div class="step-head">
+          <span class="step-number">1</span>
+          <div>
+            <h2>Scan the current page</h2>
+            <p class="muted small">Find fillable fields on this job application page.</p>
+          </div>
+        </div>
+        <button id="scan" class="wide" type="button">Scan page</button>
+        <button id="enable-frames" class="secondary hidden wide" type="button">Open embedded form directly</button>
+        <details class="compact-tools advanced-only">
+          <summary>Scan options</summary>
+          <button id="ai-scan" class="secondary wide" type="button">Improve scan with local AI</button>
+          <button id="ai-visual-scan" class="secondary wide" type="button">Improve scan with AI vision</button>
+        </details>
+      </section>
+
+      <section id="compatibility-card" class="panel compatibility-card hidden">
+        <strong id="compatibility-title">Site compatibility</strong>
+        <p id="compatibility-message" class="muted small"></p>
+      </section>
+
+      <section class="panel step-panel">
+        <div class="step-head">
+          <span class="step-number">2</span>
+          <div>
+            <h2>Review matches</h2>
+            <p id="match-summary" class="muted small">No scan yet.</p>
+          </div>
+        </div>
+        <div id="results"></div>
+        <div id="scan-diagnostic" class="scan-diagnostic hidden"></div>
+      </section>
+
+      <section class="panel step-panel">
+        <div class="step-head">
+          <span class="step-number">3</span>
+          <div>
+            <h2>Fill safely</h2>
+            <p class="muted small">Bulk fill skips complex search/dropdown fields. Use Fill this for those.</p>
+          </div>
+        </div>
+        <details class="compact-tools">
+          <summary>Fill options</summary>
+          <label class="check-row"><input id="blank-only" type="checkbox" checked /> Fill blank fields only</label>
+          <label class="check-row"><input id="guided-typing" type="checkbox" /> Guided typing for stubborn fields</label>
+        </details>
+        <div class="fill-actions">
+          <button id="fill-high-confidence" class="accent" type="button" disabled>Fill high confidence only</button>
+          <button id="fill-selected" class="secondary" type="button" disabled>Fill selected</button>
+        </div>
+        <button id="fill" class="accent wide" type="button" disabled>Fill approved matches</button>
+        <button id="field-picker" class="secondary wide" type="button">Enable click-to-choose helper</button>
+        <details class="advanced advanced-only">
+          <summary>Advanced / testing tools</summary>
+          <button id="copy-diagnostics" class="secondary wide" type="button">Copy scan diagnostic report</button>
+          <button id="clear-page" class="danger wide" type="button">Clear visible fields on this page</button>
+          <button id="repair-helper" class="secondary wide" type="button">Repair helper state</button>
+          <p class="muted small">Diagnostic reports omit your profile values and help improve scan quality faster. Clear fields only while testing.</p>
+        </details>
+      </section>
+
+      <section class="panel status-panel">
+        <p id="status" class="muted">Open a job application page, then scan it.</p>
+        <details>
+          <summary>Quick guide</summary>
+          <ol class="help-list">
+            <li>Make sure your profile is saved.</li>
+            <li>Scan the application page.</li>
+            <li>Review matches before filling.</li>
+            <li>Use click-to-choose for fields the scan missed.</li>
+          </ol>
+        </details>
+      </section>
+      <footer>Nothing is submitted automatically.</footer>
+    </main>
+    <script src="ui_theme.js"></script>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

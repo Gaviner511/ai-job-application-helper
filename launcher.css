@@ -1,0 +1,21 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #17211d;
+  background: #f5f3ed;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 280px; }
+main { padding: 16px; }
+.eyebrow { margin: 0 0 3px; color: #567168; font-size: 10px; font-weight: 800; letter-spacing: 1px; }
+h1 { margin: 0 0 10px; font-size: 18px; }
+.muted { margin: 0 0 12px; color: #687873; font-size: 12px; line-height: 1.45; }
+.card { margin-top: 10px; padding: 10px; border: 1px solid #d9ded8; border-radius: 14px; background: #fff; box-shadow: 0 5px 18px rgba(41, 61, 52, .06); }
+.launcher-actions { display: grid; grid-template-columns: 1fr; gap: 8px; }
+.section-label { margin: 0 0 4px; color: #567168; font-size: 10px; font-weight: 800; letter-spacing: .7px; text-transform: uppercase; }
+summary { cursor: pointer; color: #355c51; font-size: 12px; font-weight: 800; }
+.launcher-more { margin-top: 8px; }
+.launcher-more[open] summary { margin-bottom: 4px; }
+button { width: 100%; margin-top: 0; padding: 10px 12px; border: 0; border-radius: 10px; background: #264f43; color: #fff; cursor: pointer; font-size: 12px; font-weight: 800; }
+.secondary { border: 1px solid #ccd4d0; background: #fff; color: #264f43; }

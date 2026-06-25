@@ -1,0 +1,518 @@
+:root {
+  color-scheme: light;
+  --jah-bg: #f3f1ea;
+  --jah-window: rgba(255, 253, 247, .94);
+  --jah-window-strong: #fffdf8;
+  --jah-soft: #f7f4ec;
+  --jah-text: #17211d;
+  --jah-muted: #697870;
+  --jah-line: #ddd8cc;
+  --jah-primary: #245748;
+  --jah-primary-rgb: 36, 87, 72;
+  --jah-accent: #cf6740;
+  --jah-accent-rgb: 207, 103, 64;
+  --jah-danger: #a94b3d;
+  --jah-radius: 24px;
+  --jah-shadow: 0 22px 70px rgba(33, 44, 38, .12);
+  --jah-soft-shadow: 0 8px 28px rgba(33, 44, 38, .06);
+}
+
+:root[data-jah-accent="ocean"] {
+  --jah-bg: #eef4f7;
+  --jah-window: rgba(250, 253, 255, .95);
+  --jah-window-strong: #fbfdff;
+  --jah-soft: #eff6f9;
+  --jah-line: #d3e0e6;
+  --jah-primary: #1f6381;
+  --jah-primary-rgb: 31, 99, 129;
+  --jah-accent: #368fc0;
+  --jah-accent-rgb: 54, 143, 192;
+}
+
+:root[data-jah-accent="violet"] {
+  --jah-bg: #f4f1f8;
+  --jah-window: rgba(253, 251, 255, .95);
+  --jah-window-strong: #fefcff;
+  --jah-soft: #f6f1fb;
+  --jah-line: #ded5e8;
+  --jah-primary: #5e4b8b;
+  --jah-primary-rgb: 94, 75, 139;
+  --jah-accent: #8b6fd6;
+  --jah-accent-rgb: 139, 111, 214;
+}
+
+:root[data-jah-accent="rose"] {
+  --jah-bg: #f7f0ee;
+  --jah-window: rgba(255, 252, 250, .95);
+  --jah-window-strong: #fffdfa;
+  --jah-soft: #fbf1ee;
+  --jah-line: #e6d5d0;
+  --jah-primary: #7a3f4c;
+  --jah-primary-rgb: 122, 63, 76;
+  --jah-accent: #c96673;
+  --jah-accent-rgb: 201, 102, 115;
+}
+
+:root[data-jah-accent="amber"] {
+  --jah-bg: #f6f1e6;
+  --jah-window: rgba(255, 253, 247, .95);
+  --jah-window-strong: #fffdf7;
+  --jah-soft: #faf2de;
+  --jah-line: #e5d7b9;
+  --jah-primary: #735222;
+  --jah-primary-rgb: 115, 82, 34;
+  --jah-accent: #c8842f;
+  --jah-accent-rgb: 200, 132, 47;
+}
+
+:root[data-jah-mode="dark"] {
+  color-scheme: dark;
+  --jah-bg: #101513;
+  --jah-window: rgba(22, 29, 26, .95);
+  --jah-window-strong: #18211d;
+  --jah-soft: #1d2723;
+  --jah-text: #edf4ef;
+  --jah-muted: #9baea6;
+  --jah-line: #33423c;
+  --jah-primary: #78c7a8;
+  --jah-primary-rgb: 120, 199, 168;
+  --jah-accent: #ec8056;
+  --jah-accent-rgb: 236, 128, 86;
+  --jah-shadow: 0 22px 70px rgba(0, 0, 0, .34);
+  --jah-soft-shadow: 0 8px 28px rgba(0, 0, 0, .22);
+}
+
+:root[data-jah-mode="dark"][data-jah-accent="ocean"] {
+  --jah-bg: #0d1720;
+  --jah-window: rgba(16, 27, 36, .95);
+  --jah-window-strong: #111f2a;
+  --jah-soft: #162b38;
+  --jah-line: #294557;
+  --jah-primary: #82d4f2;
+  --jah-primary-rgb: 130, 212, 242;
+  --jah-accent: #45aee8;
+  --jah-accent-rgb: 69, 174, 232;
+}
+
+:root[data-jah-mode="dark"][data-jah-accent="violet"] {
+  --jah-bg: #15121f;
+  --jah-window: rgba(24, 20, 35, .95);
+  --jah-window-strong: #201a31;
+  --jah-soft: #2a2141;
+  --jah-line: #44395e;
+  --jah-primary: #d2b9ff;
+  --jah-primary-rgb: 210, 185, 255;
+  --jah-accent: #a98cff;
+  --jah-accent-rgb: 169, 140, 255;
+}
+
+:root[data-jah-mode="dark"][data-jah-accent="rose"] {
+  --jah-bg: #1b1115;
+  --jah-window: rgba(31, 19, 24, .95);
+  --jah-window-strong: #29191f;
+  --jah-soft: #352027;
+  --jah-line: #563945;
+  --jah-primary: #f0adb9;
+  --jah-primary-rgb: 240, 173, 185;
+  --jah-accent: #e37f93;
+  --jah-accent-rgb: 227, 127, 147;
+}
+
+:root[data-jah-mode="dark"][data-jah-accent="amber"] {
+  --jah-bg: #18130a;
+  --jah-window: rgba(30, 24, 14, .95);
+  --jah-window-strong: #261e11;
+  --jah-soft: #332817;
+  --jah-line: #534225;
+  --jah-primary: #f3c978;
+  --jah-primary-rgb: 243, 201, 120;
+  --jah-accent: #e5a23c;
+  --jah-accent-rgb: 229, 162, 60;
+}
+
+html {
+  min-height: 100%;
+  background: var(--jah-bg);
+}
+
+body.jah-unified-ui {
+  min-height: 100vh;
+  color: var(--jah-text);
+  background:
+    radial-gradient(circle at 18% -8%, rgba(var(--jah-accent-rgb), .15), transparent 34%),
+    linear-gradient(135deg, rgba(var(--jah-primary-rgb), .08), transparent 38%),
+    var(--jah-bg);
+}
+
+body.jah-unified-ui main {
+  position: relative;
+  background: var(--jah-window);
+  border: 1px solid var(--jah-line);
+  border-radius: var(--jah-radius);
+  box-shadow: var(--jah-shadow);
+  overflow: clip;
+}
+
+body.jah-unified-ui main > header,
+body.jah-unified-ui .topbar {
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--jah-line);
+}
+
+body.jah-unified-ui .panel,
+body.jah-unified-ui .card {
+  margin-top: 0;
+  border-width: 1px 0 0;
+  border-style: solid;
+  border-color: var(--jah-line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+body.jah-unified-ui .panel:first-of-type,
+body.jah-unified-ui .card:first-of-type {
+  border-top: 0;
+}
+
+body.jah-unified-ui .hero,
+body.jah-unified-ui .intro-panel,
+body.jah-unified-ui .status-panel {
+  background: linear-gradient(180deg, rgba(var(--jah-primary-rgb), .045), transparent);
+}
+
+body.jah-unified-ui .workspace-grid {
+  gap: 0;
+  margin-top: 0;
+  border-top: 1px solid var(--jah-line);
+}
+
+body.jah-unified-ui .workspace-grid > * {
+  min-width: 0;
+}
+
+body.jah-unified-ui .workspace-grid > * + * {
+  border-left: 1px solid var(--jah-line);
+}
+
+body.jah-unified-ui .side-column .panel,
+body.jah-unified-ui .resume-card.panel,
+body.jah-unified-ui .notes-panel.panel {
+  border-top: 0;
+}
+
+body.jah-unified-ui .page-flow,
+body.jah-unified-ui .workflow {
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid var(--jah-line);
+  border-radius: 18px;
+  background: var(--jah-window-strong);
+}
+
+body.jah-unified-ui .workflow-step,
+body.jah-unified-ui .flow-card {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+body.jah-unified-ui .workflow-step + .workflow-step,
+body.jah-unified-ui .flow-card + .flow-card {
+  border-left: 1px solid var(--jah-line);
+}
+
+body.jah-unified-ui .entry-card,
+body.jah-unified-ui .match,
+body.jah-unified-ui .memory-card,
+body.jah-unified-ui .job-card,
+body.jah-unified-ui .active-profile-row,
+body.jah-unified-ui .popup-profile-switcher,
+body.jah-unified-ui .profile-switcher,
+body.jah-unified-ui .profile-check,
+body.jah-unified-ui .profile-transfer,
+body.jah-unified-ui .advanced,
+body.jah-unified-ui .compact,
+body.jah-unified-ui .compact-tools,
+body.jah-unified-ui .top-toolbox,
+body.jah-unified-ui .profile-file-tools details,
+body.jah-unified-ui .module-hint,
+body.jah-unified-ui .job-type-options,
+body.jah-unified-ui .mode-choice label,
+body.jah-unified-ui .scan-diagnostic,
+body.jah-unified-ui .classification-report,
+body.jah-unified-ui .empty,
+body.jah-unified-ui .ai-status {
+  border-color: var(--jah-line);
+  background: rgba(var(--jah-primary-rgb), .035);
+  box-shadow: none;
+}
+
+body.jah-unified-ui .entry-card,
+body.jah-unified-ui .match,
+body.jah-unified-ui .memory-card,
+body.jah-unified-ui .job-card {
+  border-radius: 12px;
+}
+
+body.jah-unified-ui button,
+body.jah-unified-ui .import-button {
+  background: var(--jah-primary);
+  color: #fff;
+  box-shadow: none;
+}
+
+body.jah-unified-ui button:hover:not(:disabled),
+body.jah-unified-ui .import-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(var(--jah-primary-rgb), .16);
+}
+
+body.jah-unified-ui .secondary,
+body.jah-unified-ui .secondary-import {
+  border-color: var(--jah-line);
+  background: var(--jah-window-strong);
+  color: var(--jah-primary);
+}
+
+body.jah-unified-ui .accent,
+body.jah-unified-ui .module-tab.active,
+body.jah-unified-ui .resume-toolbar button.active {
+  background: var(--jah-accent);
+  color: #fff;
+}
+
+body.jah-unified-ui .danger {
+  border-color: color-mix(in srgb, var(--jah-danger) 28%, var(--jah-line));
+  background: var(--jah-window-strong);
+  color: var(--jah-danger);
+}
+
+body.jah-unified-ui .eyebrow,
+body.jah-unified-ui summary,
+body.jah-unified-ui h3,
+body.jah-unified-ui .module-tab,
+body.jah-unified-ui .match-value,
+body.jah-unified-ui .pill {
+  color: var(--jah-primary);
+}
+
+body.jah-unified-ui h1,
+body.jah-unified-ui h2,
+body.jah-unified-ui .match strong,
+body.jah-unified-ui .entry-card h3,
+body.jah-unified-ui .job-card h3,
+body.jah-unified-ui .memory-card strong,
+body.jah-unified-ui .check-card strong,
+body.jah-unified-ui .active-profile-row strong,
+body.jah-unified-ui .popup-profile-switcher strong,
+body.jah-unified-ui .workflow-step strong,
+body.jah-unified-ui .drawer-suggestion strong,
+body.jah-unified-ui .resume-ai-popover strong {
+  color: var(--jah-text);
+}
+
+body.jah-unified-ui .muted,
+body.jah-unified-ui .small,
+body.jah-unified-ui label,
+body.jah-unified-ui footer,
+body.jah-unified-ui .version,
+body.jah-unified-ui .count,
+body.jah-unified-ui .help-list,
+body.jah-unified-ui .notes-list,
+body.jah-unified-ui .match-key,
+body.jah-unified-ui .match-note,
+body.jah-unified-ui .memory-card small,
+body.jah-unified-ui .job-card p,
+body.jah-unified-ui .entry-card p,
+body.jah-unified-ui .check-card ul,
+body.jah-unified-ui .popup-profile-switcher span,
+body.jah-unified-ui .active-profile-row span,
+body.jah-unified-ui .module-hint,
+body.jah-unified-ui .classification-report,
+body.jah-unified-ui .scan-diagnostic,
+body.jah-unified-ui .scan-diagnostic small,
+body.jah-unified-ui .drawer-suggestion small {
+  color: var(--jah-muted);
+}
+
+body.jah-unified-ui .memory-card span,
+body.jah-unified-ui .scan-diagnostic strong,
+body.jah-unified-ui .result-group,
+body.jah-unified-ui .top-toolbox > summary {
+  color: var(--jah-primary);
+}
+
+body.jah-unified-ui .check-summary.ok,
+body.jah-unified-ui .check-summary.warn,
+body.jah-unified-ui .result-group.review,
+body.jah-unified-ui .result-group.missing,
+body.jah-unified-ui .manual-match .match-value {
+  color: var(--jah-text);
+}
+
+:root[data-jah-mode="dark"] body.jah-unified-ui .result-group,
+:root[data-jah-mode="dark"] body.jah-unified-ui .result-group.review,
+:root[data-jah-mode="dark"] body.jah-unified-ui .result-group.missing,
+:root[data-jah-mode="dark"] body.jah-unified-ui .match-value,
+:root[data-jah-mode="dark"] body.jah-unified-ui .manual-match .match-value,
+:root[data-jah-mode="dark"] body.jah-unified-ui .check-summary.ok,
+:root[data-jah-mode="dark"] body.jah-unified-ui .check-summary.warn,
+:root[data-jah-mode="dark"] body.jah-unified-ui .empty {
+  background: rgba(var(--jah-primary-rgb), .11);
+}
+
+body.jah-unified-ui .step-number,
+body.jah-unified-ui .score {
+  background: var(--jah-primary);
+}
+
+body.jah-unified-ui input,
+body.jah-unified-ui select,
+body.jah-unified-ui textarea {
+  border-color: var(--jah-line);
+  background: var(--jah-window-strong);
+  color: var(--jah-text);
+}
+
+body.jah-unified-ui input:focus,
+body.jah-unified-ui select:focus,
+body.jah-unified-ui textarea:focus,
+body.jah-unified-ui .resume-preview:focus {
+  outline: 2px solid rgba(var(--jah-accent-rgb), .28);
+  outline-offset: 1px;
+}
+
+body.jah-unified-ui .module-nav {
+  border-top: 1px solid var(--jah-line);
+  border-bottom: 1px solid var(--jah-line);
+  background: color-mix(in srgb, var(--jah-window) 88%, transparent);
+}
+
+body.jah-unified-ui .module-tab {
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+}
+
+body.jah-unified-ui .resume-preview {
+  border-color: color-mix(in srgb, var(--jah-line) 70%, #fff);
+  box-shadow: var(--jah-soft-shadow);
+}
+
+body.jah-unified-ui .score-row > div {
+  min-width: 0;
+  flex: 1 1 220px;
+}
+
+body.jah-unified-ui #visa-risk {
+  flex: 0 0 auto;
+  max-width: none;
+  white-space: nowrap;
+  writing-mode: horizontal-tb;
+  word-break: keep-all;
+  letter-spacing: normal;
+}
+
+body.jah-unified-ui.mode-basic .advanced-only,
+body.jah-unified-ui.mode-basic details.advanced,
+body.jah-unified-ui.mode-basic .legacy-summary {
+  display: none !important;
+}
+
+.jah-theme-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  padding: 5px 7px;
+  border: 1px solid var(--jah-line);
+  border-radius: 999px;
+  background: var(--jah-window-strong);
+  color: var(--jah-muted);
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.jah-theme-control.mode-only {
+  padding: 2px;
+  border-color: transparent;
+  background: transparent;
+}
+
+.jah-theme-control select {
+  appearance: none;
+  width: auto;
+  min-width: 82px;
+  margin: 0;
+  padding: 5px 24px 5px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  background:
+    linear-gradient(45deg, transparent 50%, var(--jah-muted) 50%) calc(100% - 13px) 52% / 5px 5px no-repeat,
+    linear-gradient(135deg, var(--jah-muted) 50%, transparent 50%) calc(100% - 8px) 52% / 5px 5px no-repeat,
+    var(--jah-window);
+  color: var(--jah-text);
+}
+
+.jah-theme-control option {
+  background: var(--jah-window-strong);
+  color: var(--jah-text);
+}
+
+.jah-theme-control .jah-mode-toggle {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--jah-line);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(var(--jah-accent-rgb), .16), rgba(var(--jah-primary-rgb), .08)), var(--jah-window);
+  color: var(--jah-primary);
+  font-size: 13px;
+  line-height: 1;
+  overflow: hidden;
+  transition: background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease;
+}
+
+.jah-theme-control .jah-mode-toggle.active {
+  background: linear-gradient(135deg, rgba(var(--jah-primary-rgb), .32), rgba(var(--jah-accent-rgb), .18)), #121816;
+  color: #fff;
+}
+
+.jah-theme-control .jah-mode-toggle:hover {
+  transform: translateY(-1px) rotate(8deg);
+}
+
+body.jah-unified-ui header,
+body.jah-unified-ui .topbar {
+  flex-wrap: wrap;
+}
+
+body.jah-unified-ui .top-actions {
+  margin-left: auto;
+}
+
+@media (max-width: 900px) {
+  body.jah-unified-ui main {
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+  }
+
+  body.jah-unified-ui .workspace-grid > * + * {
+    border-left: 0;
+    border-top: 1px solid var(--jah-line);
+  }
+
+  body.jah-unified-ui .workflow-step + .workflow-step,
+  body.jah-unified-ui .flow-card + .flow-card {
+    border-left: 0;
+    border-top: 1px solid var(--jah-line);
+  }
+}

@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Job Application Helper</title>
+    <link rel="stylesheet" href="profile.css" />
+    <link rel="stylesheet" href="ui_theme.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <p class="eyebrow">LOCAL-ONLY PROFILE</p>
+          <h1>Application Helper <span class="version">v1.0.0</span></h1>
+        </div>
+      </header>
+
+      <section id="profile-panel" class="panel">
+        <div class="page-flow">
+          <div class="flow-card">
+            <span class="step-number">1</span>
+            <h2>Build profile</h2>
+            <p class="muted small">Import a resume or edit fields manually.</p>
+          </div>
+          <div class="flow-card">
+            <span class="step-number">2</span>
+            <h2>Review cards</h2>
+            <p class="muted small">Check education, work, projects, skills, and languages.</p>
+          </div>
+          <div class="flow-card">
+            <span class="step-number">3</span>
+            <h2>Save</h2>
+            <p class="muted small">Then use the popup on application pages.</p>
+          </div>
+        </div>
+        <details class="top-toolbox">
+          <summary>Profile tools</summary>
+        <section class="profile-switcher">
+          <div>
+            <p class="eyebrow">PROFILE SWITCHER</p>
+            <h2>Quick switch profiles</h2>
+            <p id="active-profile-label" class="muted small">Current browser profile is active.</p>
+          </div>
+          <div class="profile-switcher-controls">
+            <label>Saved profiles<select id="profile-slot-select"><option value="">No saved profiles yet</option></select></label>
+            <label>New profile name<input id="profile-slot-name" placeholder="e.g. Project Manager resume" /></label>
+            <div class="actions profile-switcher-actions">
+              <button id="load-profile-slot" class="secondary" type="button">Switch to selected</button>
+              <button id="save-new-profile-slot" class="secondary" type="button">Save current as new</button>
+              <button id="update-profile-slot" class="secondary" type="button">Update selected</button>
+              <button id="delete-profile-slot" class="danger" type="button">Delete selected</button>
+            </div>
+          </div>
+        </section>
+        <section class="profile-transfer global-transfer">
+          <div>
+            <p class="eyebrow">PROFILE FILE</p>
+            <h2>Import / export processed profile</h2>
+            <p class="muted small">Move one profile, or back up all saved profiles. JSON files contain personal details.</p>
+          </div>
+          <div class="profile-file-tools">
+            <details>
+              <summary>Single profile</summary>
+              <div class="actions transfer-actions">
+                <button id="export-profile" class="secondary" type="button">Export current profile</button>
+                <label class="import-button">Import to current form<input id="import-profile-file" type="file" accept=".json,application/json" /></label>
+                <label class="import-button secondary-import">Import as saved profile<input id="import-profile-slot-file" type="file" accept=".json,application/json" /></label>
+              </div>
+            </details>
+            <details>
+              <summary>All saved profiles</summary>
+              <div class="actions transfer-actions">
+                <button id="export-all-profiles" class="secondary" type="button">Export all saved profiles</button>
+                <label class="import-button secondary-import">Import all saved profiles<input id="import-all-profiles-file" type="file" accept=".json,application/json" /></label>
+              </div>
+            </details>
+            <button id="open-job-finder" class="secondary" type="button">Open job finder</button>
+          </div>
+        </section>
+        <section class="profile-check">
+          <div>
+            <p class="eyebrow">PROFILE CHECK</p>
+            <h2>Quality check before filling</h2>
+            <p class="muted small">Catch missing or suspicious profile details before scan/autofill uses them.</p>
+          </div>
+          <div class="actions transfer-actions">
+            <button id="run-profile-check" class="secondary" type="button">Run profile check</button>
+            <button id="start-review-mode" class="secondary" type="button">Start review mode</button>
+          </div>
+          <div id="profile-check-results" class="check-results"></div>
+        </section>
+        </details>
+        <nav class="module-nav" aria-label="Profile modules">
+          <button class="module-tab active" data-module-target="resume" type="button">Resume AI</button>
+          <button class="module-tab" data-module-target="contact" type="button">Contact</button>
+          <button class="module-tab" data-module-target="professional" type="button">Career</button>
+          <button class="module-tab" data-module-target="experience" type="button">Work</button>
+          <button class="module-tab" data-module-target="education" type="button">Education</button>
+          <button class="module-tab" data-module-target="projects" type="button">Projects</button>
+          <button class="module-tab" data-module-target="extras" type="button">Extras</button>
+          <button class="module-tab" data-module-target="preferences" type="button">Preferences</button>
+        </nav>
+        <p id="module-hint" class="module-hint">Start here: import a resume, classify it with local AI, then review each module.</p>
+        <details class="module-section" data-profile-module="resume" open>
+          <summary>Resume import</summary>
+          <label class="file-picker">Resume file
+            <input id="resume-file" type="file" accept=".pdf,.docx,.txt,.md,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" />
+          </label>
+          <p class="muted small">PDF, DOCX, TXT, or MD. The file is read locally and is not saved.</p>
+          <button id="read-resume" class="secondary" type="button">Read selected file</button>
+          <p class="muted small">You can also paste resume text below.</p>
+          <textarea id="resume-text" rows="8" placeholder="Paste resume text here, or read a selected file to preview the extracted text. It is processed locally and is not saved."></textarea>
+          <div class="actions">
+            <button id="extract-resume" class="secondary" type="button">Extract basic contact details</button>
+            <button id="ollama-classify" class="accent" type="button">Classify with local AI</button>
+          </div>
+          <div class="ollama-row">
+            <label>Ollama model<select id="ollama-model"><option value="">Detect models first</option></select></label>
+            <div class="stack-actions">
+              <button id="refresh-models" class="secondary compact" type="button">Detect models</button>
+              <button id="test-ollama" class="secondary compact" type="button">Test local AI</button>
+            </div>
+          </div>
+          <p id="ai-status" class="muted small ai-status">AI status messages appear here.</p>
+          <p class="muted small">Local AI uses Ollama on this computer. Your resume is not sent to an online service.</p>
+          <div id="classification-report" class="classification-report hidden"></div>
+          <details id="raw-ai-panel" class="legacy-summary hidden">
+            <summary>Advanced: inspect local AI JSON</summary>
+            <textarea id="raw-ai-json" rows="10" readonly></textarea>
+          </details>
+        </details>
+        <form id="profile-form">
+          <div class="section-title">
+            <h2>Saved profile fields</h2>
+            <p class="muted small">Most sections start collapsed so you can review one area at a time.</p>
+          </div>
+          <div class="actions group-actions">
+            <button id="expand-all" class="secondary" type="button">Expand all</button>
+            <button id="collapse-all" class="secondary" type="button">Collapse all</button>
+          </div>
+          <details class="profile-group module-section" data-profile-module="contact" open>
+            <summary>Contact and links</summary>
+            <div class="grid">
+              <label>First name<input name="firstName" autocomplete="given-name" /></label>
+              <label>Full name<input name="fullName" autocomplete="name" /></label>
+              <label>Preferred name<input name="preferredName" /></label>
+              <label>Middle name<input name="middleName" autocomplete="additional-name" /></label>
+              <label>Last name<input name="lastName" autocomplete="family-name" /></label>
+              <label>Email<input name="email" type="email" autocomplete="email" /></label>
+              <label>Phone<input name="phone" autocomplete="tel" /></label>
+              <label>Phone country code<input name="phoneCountryCode" placeholder="+1" /></label>
+              <label>Phone country name<input name="phoneCountryName" placeholder="United States" /></label>
+              <label>City<input name="city" autocomplete="address-level2" /></label>
+              <label>State<input name="state" autocomplete="address-level1" /></label>
+              <label>Postal code<input name="postalCode" autocomplete="postal-code" /></label>
+              <label>Address line 2<input name="addressLine2" autocomplete="address-line2" /></label>
+              <label>Country<input name="country" autocomplete="country-name" /></label>
+              <label>LinkedIn URL<input name="linkedin" inputmode="url" /></label>
+              <label>Portfolio URL<input name="portfolio" inputmode="url" /></label>
+              <label>GitHub URL<input name="github" inputmode="url" /></label>
+            </div>
+            <label>Street address<input name="streetAddress" autocomplete="street-address" /></label>
+            <label>Referral code<input name="referralCode" /></label>
+          </details>
+          <details id="professional-group" class="profile-group module-section" data-profile-module="professional" open>
+            <summary>Professional profile <span id="skills-count" class="count"></span></summary>
+            <div class="grid">
+              <label>Current company<input name="currentCompany" /></label>
+              <label>Current job title<input name="currentTitle" /></label>
+              <label>Years of experience<input name="yearsExperience" inputmode="numeric" /></label>
+              <label>Desired job title<input name="desiredTitle" /></label>
+              <label>Employment type<input name="employmentType" placeholder="Full-time" /></label>
+              <label>Desired salary<input name="desiredSalary" /></label>
+              <label>Notice period<input name="noticePeriod" /></label>
+              <label>Remote preference<input name="remotePreference" /></label>
+              <label>Willing to travel?<select name="travel"><option value="">Choose manually</option><option>Yes</option><option>No</option></select></label>
+            </div>
+            <label>Professional summary<textarea name="professionalSummary" rows="3"></textarea></label>
+            <label>Skills &amp; Tools summary<textarea name="skills" rows="4" placeholder="JavaScript, Python, Excel"></textarea></label>
+            <div id="skills-cards" class="entry-list"></div>
+            <button class="secondary add-entry" data-entry-type="skill" type="button">Add skill or tool</button>
+          </details>
+          <details id="education-group" class="profile-group module-section" data-profile-module="education" open>
+            <summary>Education <span id="education-count" class="count"></span></summary>
+            <div class="grid">
+              <label>Most recent school<input name="school" /></label>
+              <label>Highest degree<input name="degree" /></label>
+              <label>Field of study<input name="major" /></label>
+              <label>Graduation year<input name="graduationYear" inputmode="numeric" /></label>
+            </div>
+            <div id="education-cards" class="entry-list"></div>
+            <button class="secondary add-entry" data-entry-type="education" type="button">Add education entry</button>
+            <details class="legacy-summary"><summary>Advanced: combined education summary</summary><label>Education summary<textarea name="education" rows="6"></textarea></label></details>
+          </details>
+          <details id="experience-group" class="profile-group module-section" data-profile-module="experience" open>
+            <summary>Work experience <span id="experience-count" class="count"></span></summary>
+            <div id="experience-cards" class="entry-list"></div>
+            <button class="secondary add-entry" data-entry-type="experience" type="button">Add work entry</button>
+            <details class="legacy-summary"><summary>Advanced: combined work summary</summary><label>Work summary<textarea name="workExperience" rows="8"></textarea></label></details>
+          </details>
+          <details id="project-group" class="profile-group module-section" data-profile-module="projects" open>
+            <summary>Project experience <span id="project-count" class="count"></span></summary>
+            <div id="project-cards" class="entry-list"></div>
+            <button class="secondary add-entry" data-entry-type="project" type="button">Add project entry</button>
+            <details class="legacy-summary"><summary>Advanced: combined project summary</summary><label>Project summary<textarea name="projectExperience" rows="8"></textarea></label></details>
+          </details>
+          <details id="certification-group" class="profile-group module-section" data-profile-module="extras" open>
+            <summary>Certifications <span id="certification-count" class="count"></span></summary>
+            <div id="certification-cards" class="entry-list"></div>
+            <button class="secondary add-entry" data-entry-type="certification" type="button">Add certification</button>
+          </details>
+          <details id="language-group" class="profile-group module-section" data-profile-module="extras" open>
+            <summary>Languages <span id="language-count" class="count"></span></summary>
+            <div id="language-cards" class="entry-list"></div>
+            <button class="secondary add-entry" data-entry-type="language" type="button">Add language</button>
+          </details>
+          <details class="profile-group module-section" data-profile-module="preferences" open>
+            <summary>Application preferences</summary>
+            <div class="grid">
+              <label>Authorized to work?<select name="workAuthorization"><option value="">Choose manually</option><option>Yes</option><option>No</option></select></label>
+              <label>Need sponsorship?<select name="sponsorship"><option value="">Choose manually</option><option>Yes</option><option>No</option></select></label>
+              <label>Willing to relocate?<select name="relocate"><option value="">Choose manually</option><option>Yes</option><option>No</option></select></label>
+              <label>Citizenship / work status<input name="workStatus" placeholder="Authorized to work in the US" /></label>
+              <label>Visa status<input name="visaStatus" /></label>
+              <label>LinkedIn source<input name="source" placeholder="LinkedIn, referral, company site" /></label>
+              <label>Earliest start date<input name="startDate" placeholder="MM/DD/YYYY" /></label>
+            </div>
+            <label>Resume file name<input name="resumeFileName" placeholder="resume.pdf" /></label>
+            <label>Cover letter notes<textarea name="coverLetterNotes" rows="3"></textarea></label>
+            <p class="muted small">Browsers do not allow extensions to choose a resume file automatically. This is a reminder only.</p>
+          </details>
+          <div class="actions">
+            <button type="submit">Save profile</button>
+            <button id="clear-profile" class="danger" type="button">Clear</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel"><p id="status" class="muted">Import a resume or edit your profile, then save it locally.</p></section>
+      <footer>Resume details stay on this computer.</footer>
+    </main>
+    <script src="ui_theme.js"></script>
+    <script type="module" src="profile.js"></script>
+  </body>
+</html>
