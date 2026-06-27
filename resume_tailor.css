@@ -76,6 +76,11 @@ summary { cursor: pointer; color: var(--accent-2); font-size: 12px; font-weight:
 .score { display: inline-grid; width: 58px; height: 58px; margin-right: 10px; place-items: center; border-radius: 18px; background: var(--accent-2); color: #fff; font-size: 21px; font-weight: 950; }
 .pill { display: inline-flex; align-items: center; max-width: 100%; padding: 6px 9px; border-radius: 999px; background: color-mix(in srgb, var(--accent-2) 10%, transparent); color: var(--accent-2); font-size: 11px; font-weight: 900; text-transform: none; white-space: nowrap; writing-mode: horizontal-tb; overflow-wrap: normal; }
 #match-summary { overflow-wrap: anywhere; }
+.sponsorship-filter { margin-top: 12px; padding: 11px 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface-soft); color: var(--text); font-size: 12px; line-height: 1.45; overflow-wrap: anywhere; }
+.sponsorship-filter strong { display: block; margin-bottom: 4px; color: var(--accent-2); font-size: 12px; }
+.sponsorship-filter.high { border-color: rgba(192, 74, 59, .35); background: rgba(192, 74, 59, .10); }
+.sponsorship-filter.medium, .sponsorship-filter.unknown { border-color: rgba(207, 139, 53, .35); background: rgba(207, 139, 53, .10); }
+.sponsorship-filter.low { border-color: rgba(36, 87, 72, .26); background: color-mix(in srgb, var(--accent-2) 8%, transparent); }
 ul { margin: 8px 0 0; padding-left: 18px; color: var(--muted); font-size: 12px; line-height: 1.5; }
 .keyword-block { margin-top: 10px; }
 .keyword-block strong { display: block; margin-bottom: 7px; color: var(--text); font-size: 12px; }

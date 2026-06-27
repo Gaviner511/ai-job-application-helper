@@ -1,4 +1,5 @@
 import { runJsonAi, runVisionJsonAi } from "./ai_client.js";
+import { analyzeSponsorshipText, sponsorshipStatusLabel } from "./visa_filter.js";
 
 export function compactProfileBundle(profile = {}, details = {}) {
   return {
@@ -62,6 +63,20 @@ export function tailorSchema() {
           },
           required: ["score", "recommendation", "summary", "strengths", "gaps", "visa_risk"]
         },
+        sponsorship_filter: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            status: { type: "string" },
+            risk: { type: "string" },
+            disqualifying: { type: "boolean" },
+            summary: { type: "string" },
+            concerns: { type: "array", items: { type: "string" } },
+            positive_signals: { type: "array", items: { type: "string" } },
+            action: { type: "string" }
+          },
+          required: ["status", "risk", "disqualifying", "summary", "concerns", "positive_signals", "action"]
+        },
         jd_keywords: { type: "array", items: { type: "string" } },
         ats_keywords_covered: { type: "array", items: { type: "string" } },
         ats_keywords_to_consider: { type: "array", items: { type: "string" } },
@@ -91,9 +106,45 @@ export function tailorSchema() {
         interview_talking_points: { type: "array", items: { type: "string" } },
         final_checklist: { type: "array", items: { type: "string" } }
       },
-      required: ["job", "match", "jd_keywords", "ats_keywords_covered", "ats_keywords_to_consider", "missing_do_not_claim", "tailored_summary", "skills_order", "bullet_suggestions", "cover_letter_draft", "interview_talking_points", "final_checklist"]
+      required: ["job", "match", "sponsorship_filter", "jd_keywords", "ats_keywords_covered", "ats_keywords_to_consider", "missing_do_not_claim", "tailored_summary", "skills_order", "bullet_suggestions", "cover_letter_draft", "interview_talking_points", "final_checklist"]
     }
   };
+}
+
+function mergeSponsorshipFilter(analysis, deterministicFilter) {
+  const result = analysis || {};
+  const aiFilter = result.sponsorship_filter || {};
+  const merged = {
+    status: deterministicFilter.status || aiFilter.status || "unknown",
+    risk: deterministicFilter.risk || aiFilter.risk || "unknown",
+    disqualifying: Boolean(deterministicFilter.disqualifying || aiFilter.disqualifying),
+    summary: deterministicFilter.summary || aiFilter.summary || "Sponsorship risk unknown.",
+    concerns: [...new Set([...(deterministicFilter.concerns || []), ...(aiFilter.concerns || [])].filter(Boolean))],
+    positive_signals: [...new Set([...(deterministicFilter.positive_signals || []), ...(aiFilter.positive_signals || [])].filter(Boolean))],
+    action: deterministicFilter.action || aiFilter.action || "Review work authorization questions manually."
+  };
+  result.sponsorship_filter = merged;
+  result.match = result.match || {};
+  result.match.visa_risk = merged.risk || result.match.visa_risk || "unknown";
+
+  const gaps = new Set(result.match.gaps || []);
+  if (merged.summary) gaps.add(`Sponsorship: ${merged.summary}`);
+  for (const concern of merged.concerns || []) gaps.add(`Sponsorship review: ${concern}`);
+  result.match.gaps = [...gaps];
+
+  const checklist = new Set(result.final_checklist || []);
+  checklist.add(`Sponsorship filter: ${sponsorshipStatusLabel(merged)}. ${merged.action}`);
+  result.final_checklist = [...checklist];
+
+  if (merged.disqualifying) {
+    result.match.score = Math.min(Number(result.match.score || 0), 35);
+    result.match.recommendation = "skip / verify sponsorship first";
+    result.match.summary = `${result.match.summary || ""} Sponsorship filter found a likely blocking requirement. Verify before tailoring or applying.`.trim();
+  } else if (merged.status === "needs_review" && Number(result.match.score || 0) > 85) {
+    result.match.score = 85;
+    result.match.recommendation = result.match.recommendation || "review sponsorship first";
+  }
+  return result;
 }
 
 export function refineSchema() {
@@ -207,23 +258,27 @@ export async function extractJdFromScreenshot({ imageDataUrl, imageDataUrls, pag
 
 export async function analyzeResumeForJob({ jd, profile, resumeDetails, strategy = "balanced", provider = "" }) {
   const profileBundle = compactProfileBundle(profile, resumeDetails);
+  const deterministicSponsorship = analyzeSponsorshipText({ jd });
   const system = [
     "You are a careful resume tailoring assistant for job applications.",
     "Never invent experience, skills, dates, employers, schools, or credentials.",
     "Only rewrite wording, reorder emphasis, and suggest changes supported by the candidate profile.",
     "Every bullet suggestion must include evidence from the resume/profile and a risk level.",
+    "Evaluate sponsorship/work-authorization risk separately. Treat US citizenship, security clearance, public trust, or no sponsorship now/in the future as likely blocking for F-1 OPT unless the JD clearly says otherwise.",
     "Keep wording simple, confident, early-career, and ATS-friendly. Return JSON only."
   ].join(" ");
   const user = [
     `Optimization strategy: ${strategy}`,
     "Analyze this job description and candidate profile.",
     "Score match from 0-100. Flag visa/sponsorship/citizenship/security-clearance risks.",
+    `Deterministic sponsorship pre-check:\n${JSON.stringify(deterministicSponsorship)}`,
     "Generate a clean tailored resume draft plan: summary, skills order, bullet suggestions, cover letter, interview talking points, and final checklist.",
     "Do not claim missing requirements. Put unsupported requirements in missing_do_not_claim.",
     `Job page/JD:\n${String(jd || "").slice(0, 18000)}`,
     `Candidate profile JSON:\n${JSON.stringify(profileBundle).slice(0, 18000)}`
   ].join("\n\n");
-  return runJsonAi({ system, user, schema: tailorSchema(), preferProvider: provider });
+  const analysis = await runJsonAi({ system, user, schema: tailorSchema(), preferProvider: provider });
+  return mergeSponsorshipFilter(analysis, deterministicSponsorship);
 }
 
 export async function refineTailorText({ jd, profile, resumeDetails, original, instruction, provider = "" }) {

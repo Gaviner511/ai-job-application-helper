@@ -17,6 +17,7 @@ The long-term goal is to keep improving scan accuracy, resume tailoring quality,
 - Provides a click-to-choose helper next to fields when automatic matching is uncertain.
 - Supports basic and advanced modes so the UI can stay simple until deeper tools are needed.
 - Reads job descriptions from the current page and helps tailor resume content.
+- Checks sponsorship, work authorization, citizenship, and clearance language during JD analysis.
 - Exports tailored resumes as TXT, HTML, and PDF.
 - Includes a job finder and scorer workflow for reviewing potential jobs before applying.
 
@@ -75,6 +76,8 @@ Users can fill high-confidence fields, fill selected fields, or use the click-to
 ### Resume Tailor
 
 The resume tailoring workspace can read the current job description, compare it with the active profile, and generate targeted suggestions. The goal is to improve the existing resume rather than rewrite it from scratch.
+
+JD analysis includes a sponsorship filter that flags likely blocking language such as US citizenship, security clearance, public trust, and "no sponsorship now or in the future." These signals are shown as review guidance and should not be treated as legal advice.
 
 ### Job Finder
 

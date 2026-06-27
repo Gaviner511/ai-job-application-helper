@@ -1,4 +1,5 @@
 import { profileText } from "./resume_parser.js";
+import { analyzeSponsorshipText } from "./visa_filter.js";
 
 function words(text) {
   return new Set(String(text || "").toLowerCase().match(/[a-z0-9+#.-]{2,}/g) || []);
@@ -15,30 +16,19 @@ function hitList(text, terms, limit = 8) {
 }
 
 export function visaRiskForJob(job) {
-  const text = `${job.title} ${job.description} ${(job.tags || []).join(" ")}`.toLowerCase();
-  const concerns = [];
-  let visaRisk = "low";
-  let disqualifying = false;
-  if (/us citizen|u\.s\. citizen|must be a citizen|citizenship required|only us citizens/.test(text)) {
-    concerns.push("Requires US citizenship");
-    visaRisk = "high";
-    disqualifying = true;
-  }
-  if (/security clearance|active clearance|secret clearance|top secret|ts\/sci|public trust/.test(text)) {
-    concerns.push("Requires security clearance or public trust");
-    visaRisk = "high";
-    disqualifying = true;
-  }
-  if (/no sponsorship|without sponsorship|will not sponsor|unable to sponsor|not sponsor.*(?:now|future)|sponsorship.*not available|now or in the future/.test(text)) {
-    concerns.push("Clearly says no sponsorship now or in the future");
-    visaRisk = "high";
-    disqualifying = true;
-  }
-  if (/authorized to work|work authorization|sponsorship/.test(text) && visaRisk === "low") {
-    visaRisk = "medium";
-    concerns.push("Mentions work authorization or sponsorship");
-  }
-  return { visaRisk, concerns, disqualifying };
+  const filter = analyzeSponsorshipText({
+    title: job.title,
+    company: job.company,
+    location: job.location,
+    description: job.description,
+    tags: job.tags
+  });
+  return {
+    visaRisk: filter.risk === "unknown" ? "low" : filter.risk,
+    concerns: filter.status === "unknown" ? [] : filter.concerns,
+    disqualifying: filter.disqualifying,
+    sponsorshipFilter: filter
+  };
 }
 
 function recommendationFor(score, concerns) {
@@ -141,6 +131,7 @@ export function scoreJob(job, bundle, keywords = []) {
     score: finalScore,
     recommendation: recommendationFor(finalScore, concerns),
     visa_risk: visa.visaRisk,
+    sponsorship_filter: visa.sponsorshipFilter,
     concerns,
     reasons: reasons.length ? reasons : ["Limited match information"],
     score_breakdown: breakdown,
@@ -215,16 +206,21 @@ export async function scoreJobsWithLocalAi(jobs, bundle, keywords = [], ollamaRe
   return jobs.map((job) => {
     const ai = byId.get(String(job.id));
     if (!ai) return job;
+    const visa = visaRiskForJob(job);
+    const concerns = [...new Set([...(job.concerns || []), ...(visa.concerns || []), ...(ai.concerns || [])].filter(Boolean))];
+    let score = Math.max(0, Math.min(100, Math.round(Number(ai.score) || job.score || 0)));
+    if (visa.disqualifying) score = Math.min(score, 35);
     return {
       ...job,
-      score: Math.max(0, Math.min(100, Math.round(Number(ai.score) || job.score || 0))),
+      score,
       reasons: [ai.reason || "AI fit score"],
-      concerns: ai.concerns || job.concerns || [],
-      recommendation: ai.recommendation || job.recommendation,
-      visa_risk: ai.visa_risk || job.visa_risk,
+      concerns,
+      recommendation: visa.disqualifying ? "skip" : (ai.recommendation || job.recommendation),
+      visa_risk: visa.visaRisk === "high" ? "high" : (ai.visa_risk || job.visa_risk),
+      sponsorship_filter: visa.sponsorshipFilter,
       score_breakdown: ai.score_breakdown || job.score_breakdown,
       score_explanation: ai.reason || job.score_explanation,
-      application_prep: Number(ai.score) > 80 ? (ai.application_prep || job.application_prep || generateApplicationPrep({ ...job, score: Number(ai.score) }, bundle, ai.score_breakdown || job.score_breakdown)) : null
+      application_prep: score > 80 ? (ai.application_prep || job.application_prep || generateApplicationPrep({ ...job, score }, bundle, ai.score_breakdown || job.score_breakdown)) : null
     };
   });
 }

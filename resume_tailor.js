@@ -1,4 +1,5 @@
 import { analyzeResumeForJob, buildTailoredResumeText, cleanJdFromPageText, extractJdFromScreenshot, refineTailorText, rewriteResumeFromOriginal } from "./modules/resume_tailor.js";
+import { sponsorshipStatusLabel } from "./modules/visa_filter.js";
 import { getAiSettings } from "./modules/ai_client.js";
 import { capturePageScreenshots } from "./modules/visual_reader.js";
 
@@ -1002,6 +1003,26 @@ function renderAnalysis({ preserveAccepted = false } = {}) {
   const visaRisk = String(analysis.match?.visa_risk || "review");
   $("#visa-risk").textContent = `Visa risk: ${visaRisk.length > 18 ? "Review" : visaRisk}`;
   $("#visa-risk").title = visaRisk;
+  const filter = analysis.sponsorship_filter;
+  const filterBox = $("#sponsorship-filter");
+  if (filterBox && filter) {
+    filterBox.className = `sponsorship-filter ${filter.risk || "unknown"}`;
+    const details = [
+      filter.summary,
+      (filter.concerns || []).length ? `Concerns: ${(filter.concerns || []).join("; ")}` : "",
+      (filter.positive_signals || []).length ? `Positive signals: ${(filter.positive_signals || []).join("; ")}` : "",
+      filter.action ? `Action: ${filter.action}` : ""
+    ].filter(Boolean);
+    filterBox.replaceChildren();
+    const title = document.createElement("strong");
+    title.textContent = `Sponsorship filter: ${sponsorshipStatusLabel(filter)}`;
+    const body = document.createElement("div");
+    body.textContent = details.join(" ");
+    filterBox.append(title, body);
+    filterBox.classList.remove("hidden");
+  } else {
+    filterBox?.classList.add("hidden");
+  }
   listItems($("#strengths"), analysis.match?.strengths || []);
   listItems($("#gaps"), analysis.match?.gaps || []);
   chipList($("#jd-keywords"), analysis.jd_keywords || []);
